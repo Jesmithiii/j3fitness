@@ -1,0 +1,9 @@
+POST http://localhost:5000/generate_plan
+Content-Type: application/json
+
+{
+    "goal": "Shred fat while maintaining muscle",
+    "weight": 246,
+    "height": 72,
+    "experience": "Advanced"
+}
