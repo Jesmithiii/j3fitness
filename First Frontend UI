@@ -1,0 +1,28 @@
+# streamlit_app.py
+
+import streamlit as st
+import requests
+
+st.title("J3Fitness AI Coaching App")
+
+goal = st.selectbox("Choose your goal:", ["shred", "bulk", "maintenance"])
+weight = st.number_input("Enter your weight (lbs):", min_value=100, max_value=400)
+height = st.number_input("Enter your height (inches):", min_value=50, max_value=90)
+experience = st.selectbox("Training Experience:", ["Beginner", "Intermediate", "Advanced"])
+
+if st.button("Generate Plan"):
+    payload = {
+        "goal": goal,
+        "weight": weight,
+        "height": height,
+        "experience": experience
+    }
+
+    response = requests.post("http://localhost:5000/generate_plan", json=payload)
+    result = response.json()
+
+    st.subheader("Calculated Macros")
+    st.write(result['macros'])
+
+    st.subheader("Generated Plan")
+    st.write(result['plan'])
