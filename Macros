@@ -1,0 +1,34 @@
+# macros.py
+
+"""
+J3Fitness Macros Calculator Module
+
+Calculates custom macronutrient targets based on goal, weight, and body type.
+"""
+
+def calculate_macros(weight, goal):
+    # Set protein at 1.25g per lb (aggressive bodybuilding intake)
+    protein = round(weight * 1.25)
+
+    # Default starting point (soft gainer sensitive approach)
+    if goal.lower() == 'shred':
+        carbs = round(weight * 0.75)
+        fats = round(weight * 0.3)
+    elif goal.lower() == 'bulk':
+        carbs = round(weight * 1.5)
+        fats = round(weight * 0.4)
+    else:
+        carbs = round(weight)
+        fats = round(weight * 0.35)
+
+    return {
+        'protein_g': protein,
+        'carbs_g': carbs,
+        'fats_g': fats
+    }
+
+# Sample test (delete or comment when importing into main app)
+if __name__ == '__main__':
+    result = calculate_macros(246, 'shred')
+    print(result)
+
