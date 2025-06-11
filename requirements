@@ -1,0 +1,8 @@
+# Core backend framework
+flask
+
+# OpenAI API library for AI coaching plans
+openai
+
+# WSGI server for deployment (Render, Heroku, etc.)
+gunicorn
