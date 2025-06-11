@@ -1,0 +1,61 @@
+# app.py
+
+from flask import Flask, request, jsonify
+import openai
+from macros import calculate_macros
+
+app = Flask(__name__)
+
+# Replace with your real OpenAI key securely in production!
+openai.api_key = "YOUR_OPENAI_API_KEY"
+
+@app.route('/')
+def home():
+    return "J3Fitness AI Coaching API running."
+
+@app.route('/generate_plan', methods=['POST'])
+def generate_plan():
+    data = request.get_json()
+    goal = data.get('goal')
+    weight = float(data.get('weight'))
+    height = data.get('height')
+    experience = data.get('experience')
+
+    # Calculate macros
+    macros = calculate_macros(weight, goal)
+
+    # Build prompt with macros included
+    prompt = f"""
+    You are a world-class IFBB Pro bodybuilding coach for J3Fitness.
+
+    Client Info:
+    - Goal: {goal}
+    - Weight: {weight} lbs
+    - Height: {height} inches
+    - Experience: {experience}
+
+    Use these calculated macros:
+    Protein: {macros['protein_g']}g
+    Carbs: {macros['carbs_g']}g
+    Fats: {macros['fats_g']}g
+
+    Build a full plan:
+    1️⃣ 3-5 sample meals with food weights in grams
+    2️⃣ Full 5-6 day workout split (list exercises, sets x reps)
+    3️⃣ Supplement recommendations for recovery, fat loss, and muscle growth.
+    4️⃣ Coaching notes for client mindset.
+    """
+
+    response = openai.Completion.create(
+        engine="gpt-4o",
+        prompt=prompt,
+        max_tokens=700
+    )
+
+    return jsonify({
+        'macros': macros,
+        'plan': response['choices'][0]['text'].strip()
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True)
